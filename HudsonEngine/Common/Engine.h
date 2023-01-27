@@ -4,13 +4,15 @@
 
 #include "../Physics/PhysicsManager.h"
 
-class InputManager;
-
 namespace Hudson
 {
     namespace Render
     {
         class Renderer;
+    }
+    namespace Input
+    {
+        class InputManager;
     }
 }
 
@@ -27,7 +29,7 @@ namespace Hudson::Common
         std::unique_ptr<Render::Renderer> _renderer; 
         std::unique_ptr<Physics::PhysicsManager> _physics;
         // TODO: std::unique_ptr<AudioManager> _audio; 
-        std::unique_ptr<InputManager> _input;
+        std::unique_ptr<Input::InputManager> _input;
 
         bool _shutdownFlag = false;
 
@@ -88,7 +90,7 @@ namespace Hudson::Common
          * \brief Get the engine's input manager.
          * \return The input manager
          */
-        [[nodiscard]] InputManager* GetInputManager() const;
+        [[nodiscard]] Input::InputManager* GetInputManager() const;
 
         /**
          * \brief Register a hook to run before engine systems have run.

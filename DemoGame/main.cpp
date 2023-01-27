@@ -3,6 +3,7 @@
 #include <Hudson.h>
 
 #include "DemoBehaviour.h"
+#include "Player.h"
 
 Hudson::Common::Engine* engine;
 Hudson::Editor::ComponentRegistry* registry;
@@ -27,6 +28,14 @@ Hudson::Physics::PhysicsComponent* Physics1;
 Hudson::Physics::PhysicsComponent* Physics2;
 Hudson::Physics::ColliderComponent* Collider1;
 Hudson::Physics::ColliderComponent* Collider2;
+
+//Player 
+Hudson::Render::SpriteComponent* playerSprite;
+Hudson::Physics::PhysicsComponent* playerPhysics;
+Hudson::Physics::ColliderComponent* playerCollider;
+
+
+
 
 // TODO: this *needs* to move to Hudson ASAP
 Hudson::Common::ResourceManager* resManager;
@@ -62,6 +71,18 @@ void GameSetup()
 
     resManager->LoadTexture("textures/mummy_texture.png", true, "Mummy");
 
+    playerSprite = new Hudson::Render::SpriteComponent(resManager->GetShader("spriteShader"), resManager->GetTexture("Mummy"));
+    playerSprite->SetSize(glm::vec2(64.0f, 64.0f));
+    playerSprite->SetGridSize(glm::vec2(3, 4));
+    playerSprite->SetColor(glm::vec3(1.0f, 1.0f, 0.0f));
+
+    playerPhysics = new Hudson::Physics::PhysicsComponent();
+    playerPhysics->SetMass(1.0f);
+    playerPhysics->SetForce(glm::vec2(0, 0));
+    playerPhysics->SetAcceleration(glm::vec2(0, 0), true);
+    playerPhysics->SetVelocity(glm::vec2(0, 0));
+
+
     Sprite1 = new Hudson::Render::SpriteComponent(resManager->GetShader("spriteShader"), resManager->GetTexture("Mummy"));
     Sprite1->SetSize(glm::vec2(64.0f, 64.0f));
     Sprite1->SetGridSize(glm::vec2(3, 4));
@@ -86,6 +107,7 @@ void GameSetup()
 
     Collider1 = new Hudson::Physics::ColliderComponent();
     Collider2 = new Hudson::Physics::ColliderComponent();
+    playerCollider = new Hudson::Physics::ColliderComponent();
 
     // Load initial scene from file 
     // TODO: Hudson::World::Scene* startScene = engine->GetSceneManager()->LoadScene("menu.scene");
@@ -111,6 +133,17 @@ void GameSetup()
 
     blah2->GetTransform().pos.x = 1400.0f;
 
+
+    Hudson::Entity::GameObject* player = new Hudson::Entity::GameObject();
+    player->AddComponent(playerSprite);
+    player->AddComponent(new Player(playerSprite));
+    player->AddComponent(Physics2);
+    player->AddComponent(playerCollider);
+    startScene->AddObject(player);
+
+    player->GetTransform().pos.x = 500.0f;
+    player->GetTransform().pos.y = 500.0f;
+
     std::cout << "DemoGame: engine has been set up!\n";
 }
 
@@ -123,6 +156,14 @@ int main() {
 
     // Run engine loop until it is shut down
     engine->Run();
+
+    //engine->RegisterMidFrameHook([&](Hudson::Common::Engine* engine) {
+    //    //bool jumping = engine->GetInputManager()->getActionState("Jump");
+    //    /*if (jumping)
+    //    {
+    //        playerPhysics->SetAcceleration({ 0, 5 }, true);
+    //    }*/
+    //    });
 
     // Clean up
     engine->Cleanup();

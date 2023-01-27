@@ -29,7 +29,7 @@ void Hudson::Common::Engine::Setup()
     // TODO
 
     // create input system
-    _input = std::make_unique<InputManager>();
+    _input = std::make_unique<Input::InputManager>();
 
 }
 
@@ -105,7 +105,7 @@ Hudson::Physics::PhysicsManager* Hudson::Common::Engine::GetPhysicsManager() con
     return _physics.get();
 }
 
-InputManager* Hudson::Common::Engine::GetInputManager() const
+Hudson::Input::InputManager* Hudson::Common::Engine::GetInputManager() const
 {
     return _input.get();
 }

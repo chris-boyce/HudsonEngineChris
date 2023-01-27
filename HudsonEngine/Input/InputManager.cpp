@@ -1,5 +1,7 @@
 #include "InputManager.h"
 
+using namespace Hudson::Input;
+
 std::vector<InputManager*> InputManager::instances;
 
 InputManager::InputManager()
